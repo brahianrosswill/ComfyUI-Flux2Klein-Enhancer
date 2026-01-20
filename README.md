@@ -28,8 +28,8 @@ This node modifies only the active text region to affect prompt adherence and ed
 
 ## Nodes
 
-<a href="examples/nodes.png">
-  <img src="examples/nodes.png" alt="FLUX.2 Klein Enhancer" width="900">
+<a href="examples/node_fixed.png">
+  <img src="examples/node_fixed.png" alt="FLUX.2 Klein Enhancer" width="900">
 </a>
 <a href="examples/sample.png">
   <img src="examples/sample.png" alt="FLUX.2 Klein Enhancer" width="900">
