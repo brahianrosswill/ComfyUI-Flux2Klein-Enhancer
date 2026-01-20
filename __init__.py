@@ -26,4 +26,4 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "Flux2KleinDetailController": "FLUX.2 Klein Detail Controller",
 }
 
-__version__ = "2.1.1"
+__version__ = "2.1.0"
