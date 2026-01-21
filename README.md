@@ -34,7 +34,7 @@ This node modifies only the active text region to affect prompt adherence and ed
 
   
 <a href="examples/updated_sample.png">
-  <img src="examples/sample.png" alt="FLUX.2 Klein Enhancer" width="900">
+  <img src="examples/updated_sample.png" alt="FLUX.2 Klein Enhancer" width="900">
 </a>
    
    
@@ -74,6 +74,23 @@ Regional control over prompt conditioning. Divides active tokens into front/mid/
 | `low_vram` | False | True/False | Use float16 computation on CUDA devices. |
 | `device` | auto | auto/cpu/cuda:N | Compute device selection. |
 | `debug` | False | True/False | Prints debug information to console. |
+
+
+# Example of purely seperating the: 
+
+front(subject)/mid(details)/end(style) [results in these examples only meant to showcase the capability of pure seperation]
+
+<a href="examples/front.png">
+  <img src="examples/front.png" alt="FLUX.2 Detail Controller" width="500">
+</a>
+<a href="examples/mid.png">
+  <img src="examples/mid.png" alt="FLUX.2 Detail Controller" width="500">
+</a>
+<a href="examples/end.png">
+  <img src="examples/end.png" alt="FLUX.2 Detail Controller" width="500">
+</a>
+
+**Prompt:** turn only the ground into a mirror surface reflecting the sky, keep the full dog and its body unchanged and add the dog's reflection below
 
 ## How It Works
 
