@@ -33,11 +33,11 @@ This node modifies only the active text region to affect prompt adherence and ed
 </a>
 
   
-<a href="examples/sample.png">
+<a href="examples/updated_sample.png">
   <img src="examples/sample.png" alt="FLUX.2 Klein Enhancer" width="900">
 </a>
    
-   Temp Note: the workflow in this image is old.. Renamed parameters and functionality is explained below - will update workflow later.
+   
 
    
 ### FLUX.2 Klein Enhancer
