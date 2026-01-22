@@ -94,8 +94,9 @@ front(subject)/mid(details)/end(style) [results in these examples only meant to 
 
 # Added new support node to the FLUX.2 Detail Controller
 
-- Target: A user friendly node to help users comfortably section their prompts to add taget mult to them using the FLUX.2 Detail Controller.
-- The node is sectioned to three parts front/mid/end just like the Detail Controller node + a combiend box "Basically for Vanilla use".
+- Target: A user friendly node to help users comfortably section their prompts to add target mult to them using the FLUX.2 Detail Controller.
+
+- The node is sectioned to three parts front/mid/end just like the Detail Controller node + a combined box "Basically for Vanilla use".
 
   <a href="examples/new_node.png">
   <img src="examples/new_node.png" alt="FLUX.2 Detail Controller" width="500">
