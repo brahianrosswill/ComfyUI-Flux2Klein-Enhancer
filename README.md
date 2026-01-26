@@ -112,6 +112,67 @@ front(subject)/mid(details)/end(style) [results in these examples only meant to 
   <img src="examples/eg3.png" alt="FLUX.2 Detail Controller" width="500">
 </a>
 
+## Preserve Original - Solving FLUX Klein's Preservation Problem
+
+FLUX Klein has a consistency problem. Sometimes it nails the preservation of subjects and objects. Sometimes it completely ignores what you're trying to keep and generates something else entirely. There was no native way to control this.
+
+This node exposes preservation control that FLUX Klein doesn't provide. You can now control exactly how much original structure is maintained versus how much the prompt can modify the generation.
+
+### The Modes
+
+#### dampen (Recommended)
+Reduces modification strength before applying changes. This is the most reliable mode for precise preservation.
+
+**For consistent identity/object preservation: 1.20 to 1.30**
+
+This range provides solid preservation without killing your prompt's ability to make changes.
+
+#### linear
+Applies full modifications, then blends the result back with the original. Less predictable than dampen but useful when you want aggressive changes with some safety rails.
+
+#### hybrid
+Dampens parameters first, then blends the result. Combines both approaches. Can be overkill for most cases.
+
+#### blend_after
+Same as linear, just a different name.
+
+---
+
+### Usage
+
+The optimal value changes depending on your prompt and what you're preserving.
+
+- **1.20-1.30 (dampen)**: Recommended starting point for solid preservation
+- **1.40-1.50**: Tighter control when needed, very prompt-dependent
+- **0.0-1.0**: Standard range from full enhancement to balanced preservation
+- **Negative values**: Experimental, not recommended for production
+
+You might need 1.25 for one generation and 1.45 for another. That's normal. The node gives you the precision to dial in what each specific prompt needs.
+
+---
+
+### Why It Matters
+
+FLUX Klein doesn't expose preservation controls. This node creates that capability from scratch. Instead of rolling the dice on whether your subject's identity or object consistency survives the generation, you can lock it down while still letting the prompt do its work.
+
+
+# Addidtion:
+<a href="examples/updated_01_26.png">
+  <img src="examples/updated_01_26.png" alt="Preservation_01" width="1280">
+</a>
+<a href="examples/added_preservation.png">
+  <img src="examples/added_preservation.png" alt="Preservation_02" width="1280">
+</a>
+
+
+
+# Examples:
+<a href="examples/Figure_01.png">
+  <img src="examples/Figure_01.png" alt="Preservation" width="1280">
+</a>
+
+
+
 ## How It Works
 
 ### Magnitude
