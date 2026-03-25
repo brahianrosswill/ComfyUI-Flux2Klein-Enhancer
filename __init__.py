@@ -2,6 +2,7 @@ from .flux2_klein_ref_controller import NODE_CLASS_MAPPINGS as REF_NODES, NODE_D
 from .flux2_klein_text_enhancer import NODE_CLASS_MAPPINGS as TEXT_NODES, NODE_DISPLAY_NAME_MAPPINGS as TEXT_NAMES
 from .flux2_klein_enhancer import Flux2KleinEnhancer, Flux2KleinDetailController
 from .flux2_sectioned_encoder import Flux2KleinSectionedEncoder
+from .flux2_klein_mask_ref_controller import Flux2KleinMaskRefController
 
 NODE_CLASS_MAPPINGS = {
     **REF_NODES,
@@ -9,6 +10,7 @@ NODE_CLASS_MAPPINGS = {
     "Flux2KleinEnhancer": Flux2KleinEnhancer,
     "Flux2KleinDetailController": Flux2KleinDetailController,
     "Flux2KleinSectionedEncoder": Flux2KleinSectionedEncoder,
+    "Flux2KleinMaskRefController": Flux2KleinMaskRefController,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -17,7 +19,8 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "Flux2KleinEnhancer": "FLUX.2 Klein Enhancer",
     "Flux2KleinDetailController": "FLUX.2 Klein Detail Controller",
     "Flux2KleinSectionedEncoder": "FLUX.2 Klein Sectioned Encoder",
+    "Flux2KleinMaskRefController": "FLUX.2 Klein Mask Ref Controller",
 }
 
-__version__ = "2.4.0"
+__version__ = "2.5.0"
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS"]
