@@ -257,10 +257,6 @@ ref_strength:    1.50     1.20       1.00     0.70    0.30
 
 ## BETA: Mask-Guided Reference Latent Controller
 
-<a href="examples/full.png">
-  <img src="examples/full.png" alt="FLUX.2 Klein Mask Ref Controller" width="900">
-</a>
-
 > Experimental — results are promising but behavior may vary depending on prompt and image complexity.
 
 ### FLUX.2 Klein Mask Ref Controller
