@@ -112,7 +112,7 @@ Regional control over prompt conditioning. Divides active tokens into front/mid/
 
 ---
 
-## NEW: Reference Latent Control
+## Reference Latent Control
 
 <a href="examples/new_wf.png">
   <img src="examples/new_wf.png" alt="FLUX.2 Klein ref" width="500">
@@ -122,53 +122,41 @@ Regional control over prompt conditioning. Divides active tokens into front/mid/
   <img src="examples/new_nodes.png" alt="FLUX.2 Klein ref" width="500">
 </a>
 
-
-
-### The Discovery
-
-Through forward-pass hook tracing, I discovered that **reference latents are completely separate from text conditioning**. The reference latent `[1, 128, H, W]` is:
-
-1. Stored in `conditioning[0][1]['reference_latents']` metadata
-2. Patchified into `[1, num_patches, 128]` 
-3. Concatenated with the noisy latent before `img_in` projection
-4. Processed through the image stream independently of text
-
-This means we can control reference influence directly without touching text conditioning.
-
 ### FLUX.2 Klein Ref Latent Controller
 
-Direct manipulation of the reference latent tensor before it enters the model.
+Controls how strongly a specific reference image influences the generation. Requires a `MODEL` input and returns an updated `MODEL`. Chain multiple nodes to control each reference independently.
 
 #### Parameters
 
 | Parameter | Default | Range | Description |
 |-----------|---------|-------|-------------|
-| `strength` | 1.0 | 0.0 to 5.0 | Scale reference latent. **0 = ignore reference (like txt2img), 1 = normal, >1 = stronger structure lock** |
-| `blend_with_noise` | 0.0 | 0.0 to 1.0 | Blend reference with noise. 0 = pure reference, 1 = pure noise |
-| `channel_mask_start` | 0 | 0 to 127 | Start channel for selective modification |
-| `channel_mask_end` | 128 | 1 to 128 | End channel for selective modification |
-| `spatial_fade` | none | none/center_out/edges_out/top_down/left_right | Apply spatial gradient to reference strength |
-| `spatial_fade_strength` | 0.5 | 0.0 to 1.0 | Intensity of spatial fade |
-| `debug` | False | True/False | Print modification stats |
-
-#### Quick Test Settings
-
-| Test | strength | Expected Result |
-|------|----------|-----------------|
-| Baseline | 1.0 | Normal behavior |
-| Kill reference | 0.0 | Should look like txt2img |
-| Boost reference | 2.0 | Stronger structure preservation |
+| `strength` | 1.0 | 0.0 to 1000.0 | Reference attention strength. 0 = reference ignored, 1 = normal, >1 = stronger structure. |
+| `reference_index` | 0 | 0 to 7 | Which reference image to control (0 = first). |
+| `spatial_fade` | none | none/center_out/edges_out/top_down/left_right | Per-token spatial gradient applied to the strength. |
+| `spatial_fade_strength` | 0.5 | 0.0 to 1.0 | Intensity of the spatial fade. |
+| `debug` | False | True/False | Prints block index, token range, and strength to console. |
 
 ### FLUX.2 Klein Text/Ref Balance
 
-Simple single-slider control for balancing text prompt vs reference structure.
+Single slider to balance text conditioning vs. all reference images. Requires a `MODEL` input and returns an updated `MODEL`.
 
 #### Parameters
 
 | Parameter | Default | Range | Description |
 |-----------|---------|-------|-------------|
-| `balance` | 0.5 | 0.0 to 1.0 | **0 = reference only (ignore prompt), 0.5 = balanced, 1 = text only (ignore reference)** |
-| `debug` | False | True/False | Print scaling factors |
+| `balance` | 0.005 | 0.000 to 1.000 | 0 = reference only, 0.5 = balanced, 1 = text only. |
+| `debug` | False | True/False | Prints text and ref scale factors per block to console. |
+
+### FLUX.2 Klein Ref Latent Weight
+
+Minimal per-reference k/v scaler. Takes and returns `MODEL` only. Chain one node per reference for independent per-reference control.
+
+#### Parameters
+
+| Parameter | Default | Range | Description |
+|-----------|---------|-------|-------------|
+| `reference_index` | 0 | 0 to 7 | Which reference image to weight (0 = first). |
+| `weight` | 1.0 | 0.0 to 5.0 | 1.0 = unchanged, 0.0 = invisible, >1.0 = stronger influence. |
 
 <a href="examples/Figure_003.png">
   <img src="examples/Figure_003.png" alt="FLUX.2 Klein ref" width="1000">
@@ -284,13 +272,15 @@ active = active * (1.0 - normalize_strength) + normalized * normalize_strength
 
 ### Reference Latent Control
 
-The reference latent is stored in metadata and processed separately from text:
+Strength is applied to `k` and `v` inside every attention block via `attn1_patch`, after all normalisation has completed:
+
 ```python
-ref_latents = meta.get("reference_latents", None)  # [1, 128, H, W]
-ref_latents[0] = ref_latents[0] * strength  # Direct scaling
+# Token layout: [ txt_tokens | main_img_tokens | ref_0_tokens | ... | ref_N_tokens ]
+k[:, :, seq_start:seq_end, :] *= strength
+v[:, :, seq_start:seq_end, :] *= strength
 ```
 
-This modified tensor is then patchified and concatenated with the noisy latent, entering the img_stream with adjusted magnitude.
+`reference_image_num_tokens` from `extra_options` gives the exact token count per reference, allowing precise per-reference indexing without affecting other tokens.
 
 ### Active Region Detection
 Auto-detected from attention mask:
@@ -325,14 +315,6 @@ contrast:        0.00     0.05       0.10     0.15    0.25
 normalize:       0.00     0.00       0.10     0.10    0.15
 edit_weight:     0.70     0.85       1.00     1.25    1.50
 ref_strength:    1.50     1.20       1.00     0.70    0.30
-```
-
-### Reference Latent Control (NEW)
-
-```
-              LOCK     STRONG    NORMAL    LOOSE    IGNORE
-              ----     ------    ------    -----    ------
-ref_strength: 3.00      2.00      1.00     0.50      0.00
 ```
 
 ---
